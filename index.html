@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<header>
+    <html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>My Phone Book</title>
+        <link rel="Icon" href="images/11.png">
+        <!-- Bootstrap -->
+        <link href="css/bootstrap-4.3.1.css" rel="stylesheet">
+        <link href="css/design.css" rel="stylesheet">
+        <!--Page header-->
+        <div class="page-header">
+            <h2><img src="images/22.png" alt="logo" class="img-fluid page-header" height="100px" width="70px"/>Phone
+                Book
+                <small class="text-muted">My first project in javascript</small></h2>
+        </div>
+    </head>
+    <body onload="json2table()">
+    <!-- quick search-->
+    <div id="accordion">
+        <div class="card">
+            <div class="card-header">
+                <a class="card-link" data-toggle="collapse" href="#collapseOne">
+                    Quick Search
+                </a>
+            </div>
+            <div id="collapseOne" class="collapse show" data-parent="#accordion">
+                <div class="card-body">
+                    <input id="inputFname" type="text" class="rounded-sm" placeholder="Enter first name">
+                    <input id="inputLname" type="text" class="rounded-sm" placeholder="Enter last name">
+                    <input id="inputBdate" type="text" class="rounded-sm" placeholder="Enter birth date">
+                    <input id="quickSearchBtn" type="button" class="rounded-sm" value="Search" onclick="quickSearch()">
+                    <input id="quickRefreshBtn" type="button" class="rounded-sm" value="Refresh"
+                           onclick="quickSearchRefreshBtn()">
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <a class="collapsed card-link" data-toggle="collapse" href="#collapseTwo">
+                    Advanced Search
+                </a>
+            </div>
+            <!-- advanced search-->
+            <div id="collapseTwo" class="collapse" data-parent="#accordion">
+                <div class="card-body">
+                    <input id="inputAdvFname" type="text" class="rounded-sm" placeholder="Enter first name">
+                    <input id="inputAdvLname" type="text" class="rounded-sm" placeholder="Enter last name">
+                    <input id="inputAdvBdate" type="text" class="rounded-sm" placeholder="Enter birth date">
+                    <input id="inputAdvEmail" type="text" class="rounded-sm" placeholder="Enter email address">
+                    <input id="advSearchBtn" type="button" class="rounded-sm" value="Search" onclick="advancedSearch()">
+                    <input id="advRefreshBtn" type="button" class="rounded-sm" value="Refresh"
+                           onclick="advancedSearchRefreshBtn">
+                </div>
+            </div>
+            <!-- search bar -->
+            <div>
+                <input class="form-control" id="myInput" type="text" placeholder="Search.." onkeyup="megaSearch()"/>
+                <!-- add new contact button-->
+                <button type="button" class="btn btn-primary btn-default" data-toggle="modal"
+                        data-target="#New-Contact-Modal" style="float: right;"> Add New Contact
+                </button>
+            </div>
+            <!-- Table -->
+            <table class="table table-hover" id="mainTable">
+                <thead class="">
+                <tr id="gridHeader">
+                    <th>Id</th>
+                    <th>First name</th>
+                    <th>Last name</th>
+                    <th>Contact type</th>
+                    <th>Birth date</th>
+                    <th>Phone number</th>
+                    <th>Email</th>
+                </tr>
+                </thead>
+                <tbody id="userData" data-toggle="modal" data-target="#New-Contact-Modal" onclick="rowDetails()">
+                </tbody>
+            </table>
+            <!--Modal-->
+            <div class="modal fade" id="New-Contact-Modal" tabindex="-1" role="dialog"
+                 aria-labelledby="myModalLabel" aria-hidden="true" onclick="rowDetails()">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Contact Info</h4>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <div id="data">
+                                <form id="person">
+                                    <div class="form-group">
+                                        <label class="control-label">Id:</label>
+                                        <input class="form-control" id="id" name="Id" type="text"
+                                               style="font-weight: bold">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">First Name:</label>
+                                        <input class="form-control" id="firstName" name="FirstName" type="text"
+                                               style="font-weight: bold">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Last Name:</label>
+                                        <input class="form-control" id="lastName" name="LastName" type="text"
+                                               style="font-weight: bold">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Contact type:</label>
+                                        <select class="form-control" id="contactType" name="ContactType" type="text"
+                                                style="font-weight: bold">
+                                            <option>Friend</option>
+                                            <option>Personal</option>
+                                            <option>Colleague</option>
+                                            <option>Other</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Birth date:</label>
+                                        <input class="form-control" id="birthDate" name="birthDate" type="tel"
+                                               required style="font-weight: bold"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Phone number:</label>
+                                        <input class="form-control" id="phoneNumber" name="phoneNumber" type="text"
+                                               style="font-weight: bold">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Email:</label>
+                                        <input class="form-control" id="email" name="email" type="text"
+                                               style="font-weight: bold">
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" onclick="ResetForm()">Reset</button>
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                <button id="saveBtn" type="button" class="btn btn-primary" data-dismiss="modal"
+                                        onclick="addData()">
+                                    Save
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap-4.3.1.js"></script>
+    <script src="js/scripts.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js">
+    </script>
+    </body>
+    </html>
+</header>
