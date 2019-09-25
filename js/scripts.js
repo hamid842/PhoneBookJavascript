@@ -47,13 +47,30 @@ var jsonData =
     ];
 
 var tableData = jsonData.slice();
+
 /**
  * function for inserting json to table
  */
 function json2table() {
     let rows = '';
-    const tableFilteredData = jsonData.slice();
+    const tableFilteredData = tableData.slice();
     const filteredData = tableFilteredData.filter(filterData);
+    filteredData.map((obj, key) => {
+        rows += "<tr><td>" + obj.id + "</td>" +
+            "<td>" + obj.firstName + "</td>" +
+            "<td>" + obj.lastName + "</td>" +
+            "<td>" + obj.contactType + "</td>" +
+            "<td>" + obj.birthDate + "</td>" +
+            "<td>" + obj.phoneNumber + "</td>" +
+            "<td>" + obj.email + "</td></tr>"
+        document.getElementById("userData").innerHTML = rows;
+    });
+}
+
+function json2table1() {
+    var rows = '';
+    var tableFilteredData = jsonData.slice();
+    var filteredData = tableFilteredData.filter(filterDataForAdvancedSearch);
     filteredData.map((obj, key) => {
         rows += "<tr><td>" + obj.id + "</td>" +
             "<td>" + obj.firstName + "</td>" +
@@ -83,26 +100,30 @@ function filterData(value, index, array) {
         return array;
     }
 }
- function filterDataForAdvancedSearch(value , index , array) {
-     const inputFName = document.getElementById("inputAdvFname").value;
-     const inputLName = document.getElementById("inputAdvLname").value;
-     const inputEmail = document.getElementById("inputAdvEmail").value;
-     const inputBDate = document.getElementById("inputAdvBdate").value;
-     if (inputFName) {
-         return value.firstName.includes(inputFName, 0);
-     }
-     if (inputLName) {
-         return value.lastName.includes(inputLName, 0);
-     }
-     if (inputBDate) {
-         return value.birthDate.includes(inputBDate, 0);
-     }
-     if (inputEmail) {
-         return value.email.includes(inputEmail, 0);
-     }else {
-         return array;
-     }
- }
+
+function filterDataForAdvancedSearch(value, index, array) {
+    var result1, result2, result3, result4;
+    const inputFName = document.getElementById("inputAdvFname").value;
+    const inputLName = document.getElementById("inputAdvLname").value;
+    const inputEmail = document.getElementById("inputAdvEmail").value;
+    const inputBDate = document.getElementById("inputAdvBdate").value;
+    if (inputFName) {
+        result1 = value.firstName.includes(inputFName, 0);
+    }
+    if (inputLName) {
+        result2 = value.lastName.includes(inputLName, 0);
+    }
+    if (inputBDate) {
+        result3 = value.birthDate.includes(inputBDate, 0);
+    }
+    if (inputEmail) {
+        result4 = value.email.includes(inputEmail, 0);
+        return result1 + result2 + result3 + result4;
+    } else {
+        return array;
+    }
+}
+
 /**
  * function for "save" button in modal
  */
@@ -132,7 +153,22 @@ function addData() {
     cell6.innerHTML = phoneNumber;
     cell7.innerHTML = email;
     rowDetails();
+    updateJSON();
 }
+
+function updateJSON() {
+    var obj = {
+        "id": document.getElementById('id').value,
+        "firstName": document.getElementById('firstName').value,
+        "lastName": document.getElementById('lastName').value,
+        "contactType": document.getElementById('contactType').value,
+        "birthDate": document.getElementById('birthDate').value,
+        "phoneNumber": document.getElementById('phoneNumber').value,
+        "email": document.getElementById('email').value
+    }
+    return tableData.push(obj);
+}
+
 
 /**
  * function for show row details in modal
@@ -170,17 +206,18 @@ function megaSearch() {
 function quickSearch() {
     json2table();
 }
+
 function advancedSearch() {
-    filterDataForAdvancedSearch();
+    json2table1();
 }
 
 /**
  * function for quick search refresh button
  */
 function quickSearchRefreshBtn() {
-    const inputFName = document.getElementById("inputFname").value = '';
-    const inputLName = document.getElementById("inputLname").value =  '';
-    const inputBDate = document.getElementById("inputBdate").value = '';
+    document.getElementById("inputFname").value = '';
+    document.getElementById("inputLname").value = '';
+    document.getElementById("inputBdate").value = '';
     quickSearch();
 }
 
@@ -188,9 +225,9 @@ function quickSearchRefreshBtn() {
  * function for advanced search refresh button
  */
 function advancedSearchRefreshBtn() {
-    const inputFName = document.getElementById("inputFname").value = '';
-    const inputLName = document.getElementById("inputLname").value =  '';
-    const inputBDate = document.getElementById("inputBdate").value = '';
-    const inputEmail = document.getElementById("inputEmail").value = '';
+    document.getElementById("inputAdvFname").value = '';
+    document.getElementById("inputAdvLname").value = '';
+    document.getElementById("inputAdvBdate").value = '';
+    document.getElementById("inputAdvEmail").value = '';
     quickSearch();
 }
